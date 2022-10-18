@@ -11,10 +11,53 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
+  id       Int       @id @default(autoincrement())
+  email    String    @unique
   password String
   fullname String
+  project  Project[]
 
   @@map("users")
+}
+
+model Project {
+  id       Int              @id @default(autoincrement())
+  title    String
+  ownerId  Int
+  owner    User             @relation(fields: [ownerId], references: [id])
+  requests ProjectRequest[]
+
+  createdAt DateTime @default(now())
+
+  @@map("projects")
+}
+
+model ProjectRequest {
+  id          Int             @id @default(autoincrement())
+  title       String
+  description String?
+  projectId   Int
+  project     Project         @relation(fields: [projectId], references: [id])
+  schemas     RequestSchema[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("project_requests")
+}
+
+model RequestSchema {
+  id        Int             @id @default(autoincrement())
+  key       String
+  type      String
+  category  SchemaCategory
+  request   ProjectRequest? @relation(fields: [requestId], references: [id])
+  requestId Int?
+
+  @@map("request_schemas")
+}
+
+enum SchemaCategory {
+  REQUEST
+  RESPONSE
 }
