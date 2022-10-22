@@ -4,12 +4,10 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { GetUser } from 'src/users/decorator';
 import { AuthService } from './auth.service';
+import { GetUser, GetUserId, Public } from './decorator';
 import { SignInAuthDto, SignUpAuthDto } from './dto';
 import { JwtRefreshGuard } from './guard/jwt-refresh.guard';
 import { JwtAuthGuard } from './guard/jwt.guard';
@@ -18,12 +16,14 @@ import { JwtAuthGuard } from './guard/jwt.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   @Post('/signup')
   async signUp(@Body() dto: SignUpAuthDto) {
     return this.authService.signUp(dto);
   }
 
+  @Public()
   @HttpCode(HttpStatus.OK)
   @Post('/signin')
   async signIn(@Body() dto: SignInAuthDto) {
@@ -40,8 +40,10 @@ export class AuthController {
   @UseGuards(JwtRefreshGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
-  async refreshToken(@Req() req: Request) {
-    const user = req.user;
-    return this.authService.refreshToken(user['id'], user['refreshToken']);
+  async refreshToken(
+    @GetUser('refreshToken') refreshToken: string,
+    @GetUserId() userId: number,
+  ) {
+    return this.authService.refreshToken(userId, refreshToken);
   }
 }

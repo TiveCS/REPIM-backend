@@ -11,7 +11,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { GetUser } from 'src/users/decorator/user.decorator';
+import { GetUser } from 'src/auth/decorator/get-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guard';
 
 @UseGuards(JwtAuthGuard)
