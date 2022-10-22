@@ -1,7 +1,6 @@
 import { CreateProjectRequestDto } from './dto/create-project-request.dto';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectsService } from './projects.service';
-import { JwtAuthGuard } from './../auth/guard/jwt.guard';
 import {
   Body,
   Controller,
@@ -13,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/users/decorator/user.decorator';
+import { JwtAuthGuard } from 'src/auth/guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('projects')
