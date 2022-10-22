@@ -17,6 +17,8 @@ model User {
   fullname String
   project  Project[]
 
+  refreshToken String?
+
   @@map("users")
 }
 
