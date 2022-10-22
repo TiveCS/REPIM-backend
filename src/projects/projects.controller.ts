@@ -1,3 +1,4 @@
+import { CreateProjectRequestDto } from './dto/create-project-request.dto';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectsService } from './projects.service';
 import { JwtAuthGuard } from './../auth/guard/jwt.guard';
@@ -37,5 +38,14 @@ export class ProjectsController {
   @Get()
   async getProjectsByOwnerId(@GetUser('id') ownerId: number) {
     return this.projectsService.getProjectsByOwnerId(ownerId);
+  }
+
+  @Post('/:id/requests')
+  async createProjectRequest(
+    @Body() dto: CreateProjectRequestDto,
+    @Param('id', ParseIntPipe) projectId: number,
+    @GetUser('id') ownerId: number,
+  ) {
+    return this.projectsService.createProjectRequest(dto, projectId, ownerId);
   }
 }

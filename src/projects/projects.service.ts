@@ -1,9 +1,10 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from './../prisma/prisma.service';
+import { CreateProjectRequestDto } from './dto/create-project-request.dto';
 import { CreateProjectDto } from './dto/create-project.dto';
 
 @Injectable()
@@ -75,5 +76,51 @@ export class ProjectsService {
 
     if (project.ownerId !== ownerId)
       throw new ForbiddenException('You are not the owner of this project');
+  }
+
+  async createProjectRequest(
+    dto: CreateProjectRequestDto,
+    projectId: number,
+    ownerId: number,
+  ) {
+    await this.verifyProjectOwner(projectId, ownerId);
+
+    const projectRequest = await this.prisma.projectRequest.create({
+      data: {
+        ...dto,
+        project: {
+          connect: {
+            id: projectId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        title: true,
+        createdAt: true,
+      },
+    });
+
+    return projectRequest;
+  }
+
+  async deleteProjectRequestById(
+    requestId: number,
+    projectId: number,
+    ownerId: number,
+  ) {
+    await this.verifyProjectOwner(projectId, ownerId);
+
+    const projectRequest = await this.prisma.projectRequest.delete({
+      where: {
+        id: requestId,
+      },
+      select: {
+        id: true,
+        title: true,
+      },
+    });
+
+    return projectRequest;
   }
 }
