@@ -1,6 +1,3 @@
-import { CreateProjectRequestDto } from './dto/create-project-request.dto';
-import { CreateProjectDto } from './dto/create-project.dto';
-import { ProjectsService } from './projects.service';
 import {
   Body,
   Controller,
@@ -9,12 +6,12 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator/get-user.decorator';
-import { JwtAuthGuard } from 'src/auth/guard';
+import { CreateProjectRequestDto } from './dto/create-project-request.dto';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { ProjectsService } from './projects.service';
 
-@UseGuards(JwtAuthGuard)
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
