@@ -37,6 +37,7 @@ export class AuthController {
     return this.authService.logout(userId);
   }
 
+  @Public()
   @UseGuards(JwtRefreshGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/refresh')
